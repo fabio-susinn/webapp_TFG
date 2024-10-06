@@ -155,6 +155,7 @@
           <label class="form-check-label" for="ded5">>4h/day</label>
         </div>
       </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
     </form>
   </div>
 </template>
