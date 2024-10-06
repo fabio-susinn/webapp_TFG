@@ -1,47 +1,26 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import HeaderItem from './components/HeaderItem.vue'
+import FormView from './components/FormView.vue'
 </script>
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
+    <HeaderItem></HeaderItem>
   </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+  <div class="container">
+    <FormView></FormView>
+  </div>
 </template>
 
 <style scoped>
 header {
-  line-height: 1.5;
+  margin-bottom: 3rem;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+#app {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: 0;
 }
 </style>
