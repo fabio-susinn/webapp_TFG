@@ -2,7 +2,7 @@
   <div class="container-fluid" id="main-container">
     <form>
       <div class="mb-3">
-        <label for="email-formcontrol" class="form-label">Email address</label>
+        <label for="email-formcontrol" class="form-label"><b>Email address</b></label>
         <input
           type="email"
           class="form-control"
@@ -12,11 +12,11 @@
       </div>
 
       <div class="mb-3">
-        <label for="niub-formcontrol" class="form-label">NIUB:</label>
+        <label for="niub-formcontrol" class="form-label"><b>NIUB:</b></label>
         <input type="number" class="form-control" id="niub-formcontrol" placeholder="12345678" />
       </div>
 
-      <label for="subject-select" class="form-label">Select a subject</label>
+      <label for="subject-select" class="form-label"><b>Select a subject:</b></label>
       <select
         class="form-select"
         aria-label="Default select example"
@@ -32,7 +32,7 @@
         <option value="TFG">Projecte Final de Grau</option>
       </select>
 
-      <label for="task-select" class="form-label">Select a task</label>
+      <label for="task-select" class="form-label"><b>Select a task:</b></label>
       <select
         class="form-select"
         aria-label="Default select example"
@@ -45,116 +45,146 @@
         </option>
       </select>
 
-      <label for="stress-cont"
-        >How would you rate the stress level caused by the pending task?</label
-      >
+      <template v-for="n in numberPrevDays" :key="n">
+        <h2>DAY {{ n }}</h2>
 
-      <div class="mb-3" id="stress-cont">
-        <div class="form-check form-check-inline">
-          <input
-            class="form-check-input"
-            type="radio"
-            id="stress1"
-            value="1"
-            name="inlineRadioOptions"
-          />
-          <label class="form-check-label" for="stress1">Very Low</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input
-            class="form-check-input"
-            type="radio"
-            id="stress2"
-            value="2"
-            name="inlineRadioOptions"
-          />
-          <label class="form-check-label" for="stress2">Low</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input
-            class="form-check-input"
-            type="radio"
-            id="stress3"
-            value="3"
-            name="inlineRadioOptions"
-          />
-          <label class="form-check-label" for="stress3">Moderated</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input
-            class="form-check-input"
-            type="radio"
-            id="stress4"
-            value="4"
-            name="inlineRadioOptions"
-          />
-          <label class="form-check-label" for="stress4">High</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input
-            class="form-check-input"
-            type="radio"
-            id="stress5"
-            value="5"
-            name="inlineRadioOptions"
-          />
-          <label class="form-check-label" for="stress5">Very High</label>
-        </div>
-      </div>
+        <div class="container day_container">
+          <label for="stress-cont">
+            <b>How would you rate the stress level caused by the pending task?</b></label
+          >
+          <div class="mb-3" id="stress-cont">
+            <div class="form-check form-check-inline">
+              <input
+                class="form-check-input"
+                type="radio"
+                :id="`stress1-d${n}`"
+                value="1"
+                :name="`stress-1-d${n}`"
+              />
+              <label class="form-check-label" :for="`stress1-d${n}`">Very Low</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input
+                class="form-check-input"
+                type="radio"
+                :id="`stress2-d${n}`"
+                value="2"
+                :name="`stress-1-d${n}`"
+              />
+              <label class="form-check-label" :for="`stress2-d${n}`">Low</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input
+                class="form-check-input"
+                type="radio"
+                :id="`stress3-d${n}`"
+                value="3"
+                :name="`stress-1-d${n}`"
+              />
+              <label class="form-check-label" :for="`stress3-d${n}`">Moderated</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input
+                class="form-check-input"
+                type="radio"
+                :id="`stress4-d${n}`"
+                value="4"
+                :name="`stress-1-d${n}`"
+              />
+              <label class="form-check-label" :for="`stress4-d${n}`">High</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input
+                class="form-check-input"
+                type="radio"
+                :id="`stress5-d${n}`"
+                value="5"
+                :name="`stress-1-d${n}`"
+              />
+              <label class="form-check-label" :for="`stress5-d${n}`">Very High</label>
+            </div>
+          </div>
 
-      <label for="dedication-cont">How many hours do you spend on the pending task?</label>
-      <div class="mb-3" id="dedication-cont">
-        <div class="form-check form-check-inline">
-          <input
-            class="form-check-input"
-            type="radio"
-            id="ded1"
-            value="1"
-            name="inlineRadioOptions"
-          />
-          <label class="form-check-label" for="ded1">&#60;1h/day</label>
+          <label for="dedication-cont"
+            ><b>How many hours did you spend on the pending task?</b></label
+          >
+          <div class="mb-3" id="dedication-cont">
+            <div class="form-check form-check-inline">
+              <input
+                class="form-check-input"
+                type="radio"
+                :id="`ded1-d${n}`"
+                value="1"
+                :name="`dedication-1-d${n}`"
+              />
+              <label class="form-check-label" :for="`ded1-d${n}`">&#60;1h/day</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input
+                class="form-check-input"
+                type="radio"
+                :id="`ded2-d${n}`"
+                value="2"
+                :name="`dedication-1-d${n}`"
+              />
+              <label class="form-check-label" :for="`ded2-d${n}`">1-2h/day</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input
+                class="form-check-input"
+                type="radio"
+                :id="`ded3-d${n}`"
+                value="3"
+                :name="`dedication-1-d${n}`"
+              />
+              <label class="form-check-label" :for="`ded3-d${n}`">2-3h/day</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input
+                class="form-check-input"
+                type="radio"
+                :id="`ded4-d${n}`"
+                value="4"
+                :name="`dedication-1-d${n}`"
+              />
+              <label class="form-check-label" :for="`ded4-d${n}`">3-4h/day</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input
+                class="form-check-input"
+                type="radio"
+                :id="`ded5-d${n}`"
+                value="5"
+                :name="`dedication-1-d${n}`"
+              />
+              <label class="form-check-label" :for="`ded5-d${n}`">>4h/day</label>
+            </div>
+          </div>
+
+          <div class="range_cotainer">
+            <label for="percentage_task" class="form-label text-muted"
+              >Use the slider to indicate the percentage of the task completed</label
+            >
+            <div class="container">
+              <div class="row">
+                <div class="col">
+                  <input
+                    type="range"
+                    class="form-range"
+                    id="percentage_task"
+                    value="0"
+                    v-model="percentage[n]"
+                    step="10"
+                    :name="`percentage-d${n}`"
+                  />
+                </div>
+                <div class="col">{{ percentage[n] }}%</div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="form-check form-check-inline">
-          <input
-            class="form-check-input"
-            type="radio"
-            id="ded2"
-            value="2"
-            name="inlineRadioOptions"
-          />
-          <label class="form-check-label" for="ded2">1-2h/day</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input
-            class="form-check-input"
-            type="radio"
-            id="ded3"
-            value="3"
-            name="inlineRadioOptions"
-          />
-          <label class="form-check-label" for="ded3">2-3h/day</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input
-            class="form-check-input"
-            type="radio"
-            id="ded4"
-            value="4"
-            name="inlineRadioOptions"
-          />
-          <label class="form-check-label" for="ded4">3-4h/day</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input
-            class="form-check-input"
-            type="radio"
-            id="ded5"
-            value="5"
-            name="inlineRadioOptions"
-          />
-          <label class="form-check-label" for="ded5">>4h/day</label>
-        </div>
-      </div>
+      </template>
+
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>
   </div>
@@ -164,6 +194,7 @@
 export default {
   data() {
     return {
+      numberPrevDays: 5,
       selectedSubject: '',
       selectedTask: '',
       options: {
@@ -194,7 +225,8 @@ export default {
         ],
         ML: ['Work 2 Lab Project', 'Work 3 Lab Project', 'Work 4 Lab Project', 'Final Exam'],
         TFG: ['Sprint 1', 'Sprint 2', 'Sprint 3', 'Entrega Memòria']
-      }
+      },
+      percentage: [0, 0, 0, 0, 0]
     }
   },
   computed: {
@@ -205,4 +237,12 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.range_cotainer {
+  width: 50%;
+}
+
+.day_container {
+  padding: 0.375rem 0.75rem;
+}
+</style>
