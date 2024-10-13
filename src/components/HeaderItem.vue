@@ -2,7 +2,7 @@
   <div data-bs-theme="dark">
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">Student Syndrome</a>
+        <a class="navbar-brand" href="#">Student Workload</a>
         <button
           class="navbar-toggler"
           type="button"
@@ -27,7 +27,7 @@
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                ESP
+                EN
               </a>
               <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="#">ESP</a></li>
