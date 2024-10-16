@@ -1,5 +1,6 @@
 import './assets/main.css'
 import App from './App.vue'
+import { router } from '@/routes'
 
 import { createApp } from 'vue'
 
@@ -25,4 +26,4 @@ const i18n = createI18n({
   }
 })
 
-createApp(App).use(bootstrap).use(i18n).mount('#app')
+createApp(App).use(bootstrap).use(i18n).use(router).mount('#app')
