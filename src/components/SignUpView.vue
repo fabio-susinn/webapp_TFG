@@ -1,7 +1,6 @@
 <script setup>
 import { db } from '@/firebase'
-import { auth } from '@/firebase'
-import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth'
 import { collection, addDoc } from 'firebase/firestore'
 </script>
 
@@ -33,6 +32,9 @@ import { collection, addDoc } from 'firebase/firestore'
       <div class="mb-3">
         <label for="user_password" class="form-label">Password</label>
         <input type="password" class="form-control" id="user_password" />
+        <label for="user_password" class="text-muted" style="margin-top: 0.75rem"
+          >Password must be 6 characters length</label
+        >
       </div>
       <label for="subject-select" class="form-label">Select the subjects you are coursing:</label>
       <select
@@ -118,25 +120,28 @@ export default {
 
       this.submitAnswer(data, password)
     },
-    submitAnswer(data, password) {
-      createUserWithEmailAndPassword(auth, data.email, password).then(
-        addDoc(collection(db, 'users'), data)
-        .then(() => {
-          console.log('Document successfully written!')
-          alert('User correctly registered!!')
-          this.$router.push("/home")
-        })
-        .catch((error) => {
-          console.error('Error writing document: ', error)
-          alert('Ooopss!\n Something went wrong.\n Try again, please!!')
-        })
-      ).catch((error) => {
-          const errorCode = error.code
-          const errorMessage = error.message
-          console.error('Error Code Authencication: ', errorCode)
-          console.error('Error Message Authencication: ', errorMessage)
-          // ..
-        })
+    async submitAnswer(data, password) {
+      try {
+        await createUserWithEmailAndPassword(getAuth(), data.email, password).then(
+          addDoc(collection(db, 'users'), data)
+            .then(() => {
+              console.log('Document successfully written!')
+              alert('User correctly registered!!')
+            })
+            .catch((error) => {
+              console.error('Error writing document: ', error)
+              alert('Ooopss!\n Something went wrong.\n Try again, please!!')
+            })
+        )
+        this.$router.push('/home')
+      } catch (error) {
+        const errorCode = error.code
+        const errorMessage = error.message
+        console.error('Error Code Authencication: ', errorCode)
+        console.error('Error Message Authencication: ', errorMessage)
+        // ..
+      }
+      
     }
   }
 }

@@ -1,11 +1,10 @@
 <script setup>
-import { auth } from '@/firebase'
-import { signOut ,onAuthStateChanged } from 'firebase/auth'
+import { onAuthStateChanged, getAuth } from 'firebase/auth'
 import { onMounted, ref } from 'vue';
 
 const isLoggedIn = ref(false)
 onMounted(() => {
-  onAuthStateChanged(auth, (user) => {
+  onAuthStateChanged(getAuth(), (user) => {
     if (user){
       isLoggedIn.value = true
     } else {
@@ -60,10 +59,14 @@ export default {
     getRedirect(item) {
       this.$router.push(item)
     }, 
-    handleSignOut() {
-      signOut(auth).then(() => {
-        this.$router.push("/login")
-      })
+    async handleSignOut() {
+      try{
+        await getAuth().signOut().then(
+            this.$router.push("/login")
+         ) 
+      }catch (error) {
+        console.error(error.message)
+      }
     }
   }
 }

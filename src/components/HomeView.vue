@@ -10,7 +10,7 @@
               <p class="card-text">
                 {{ item.desc }}
               </p>
-              <a class="btn btn-primary" @click="getRedirect(item)">Response</a>
+              <a class="btn btn-primary" :class="{disabled : item.button_inactive}" @click="getRedirect(item)">{{ item.button_mssg }}</a>
             </div>
           </div>
         </div>
@@ -28,19 +28,25 @@ export default {
           title: 'Student Workload',
           desc: 'Lorem Ipsum',
           path: 'src/assets/book.png',
-          redirect: '/studworkload-form'
+          redirect: '/studworkload-form',
+          button_mssg: 'Response',
+          button_inactive: false
         },
         {
           title: 'Big5',
           desc: 'Lorem Ipsum',
           path: 'src/assets/neurology.png',
-          redirect: '/studworkload-form'
+          redirect: '/home',
+          button_mssg: 'Coming Soon',
+          button_inactive: true
         },
         {
           title: 'TKI',
           desc: 'Lorem Ipsum',
           path: 'src/assets/swords.png',
-          redirect: '/studworkload-form'
+          redirect: '/home',
+          button_mssg: 'Coming Soon',
+          button_inactive: true
         }
       ]
     }

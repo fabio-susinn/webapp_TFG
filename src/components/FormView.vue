@@ -205,7 +205,7 @@ export default {
         .then(() => {
           console.log('Document successfully written!')
           alert('Document successfully written!\nThanks for your collaboration :) !! ')
-          location.reload()
+          this.$router.push("/home")
         })
         .catch((error) => {
           console.error('Error writing document: ', error)

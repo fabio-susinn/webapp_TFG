@@ -1,10 +1,10 @@
 <script setup>
-import { getAuth,signInWithEmailAndPassword } from 'firebase/auth'
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 </script>
 
 <template>
   <div class="container" id="login_container">
-    <form>
+    <form @submit.prevent="loginUser">
       <h1>Log In</h1>
       <div class="mb-3">
         <label for="user_email" class="form-label">Email address</label>
@@ -15,13 +15,17 @@ import { getAuth,signInWithEmailAndPassword } from 'firebase/auth'
           aria-describedby="emailHelp"
           v-model="email"
         />
-        </div>
+      </div>
       <div class="mb-3">
         <label for="user_password" class="form-label">Password</label>
         <input type="password" class="form-control" id="user_password" v-model="password" />
       </div>
-      <p><a class="link-opacity-50-hover" @click="moveToSignUp" style="cursor: pointer;">Don't have an account yet? Sign In here!</a></p>
-      <button type="submit" class="btn btn-primary"  @click="loginUser">Log In</button>
+      <p>
+        <a class="link-opacity-50-hover" @click="moveToSignUp" style="cursor: pointer"
+          >Don't have an account yet? Sign In here!</a
+        >
+      </p>
+      <button type="submit" class="btn btn-primary">Log In</button>
     </form>
   </div>
 </template>
@@ -35,33 +39,36 @@ import { getAuth,signInWithEmailAndPassword } from 'firebase/auth'
 }
 </style>
 
-
 <script>
 export default {
   data() {
-    return{ 
-        email:"",
-        password:""
+    return {
+      email: '',
+      password: '',
+      user: {}
     }
   },
   methods: {
-    moveToSignUp(){
+    moveToSignUp() {
       this.$router.push('/signup')
     },
-    loginUser(){
-        const auth = getAuth();
-        signInWithEmailAndPassword(auth, this.email,this.password)
-        .then(() => {
-             this.$router.push('/home')
-        }).catch((error) => {
+    async loginUser() {
+      const auth = getAuth()
+      try {
+        await signInWithEmailAndPassword(auth, this.email, this.password)
+        .then((userCredential) => {
+          const user = userCredential.user
+          this.user = user
+          this.$router.push('/home')
+        })
+      }
+         catch (error) {
           const errorCode = error.code
           const errorMessage = error.message
           console.error('Error Code Authentication: ', errorCode)
           console.error('Error Message Authentication: ', errorMessage)
-          // ..
-        })
-
-    }, 
+        }
+    }
   }
 }
 </script>
