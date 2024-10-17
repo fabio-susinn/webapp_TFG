@@ -1,6 +1,13 @@
+<script setup>
+import { db } from '@/firebase'
+import { collection, addDoc } from 'firebase/firestore'
+</script>
+
 <template>
   <div class="container-fluid" id="main-container">
-    <form>
+    <form @submit.prevent="prepareDataSubmit">
+      <h1 style="margin-bottom: 3rem">Questionnaire: Student Workload Tracking</h1>
+
       <div class="mb-3">
         <label for="email-formcontrol" class="form-label"><b>Email address</b></label>
         <input
@@ -8,12 +15,19 @@
           class="form-control"
           id="email-formcontrol"
           placeholder="name@alumnes.ub.edu"
+          v-model="email"
         />
       </div>
 
       <div class="mb-3">
         <label for="niub-formcontrol" class="form-label"><b>NIUB:</b></label>
-        <input type="number" class="form-control" id="niub-formcontrol" placeholder="12345678" />
+        <input
+          type="number"
+          class="form-control"
+          id="niub-formcontrol"
+          placeholder="12345678"
+          v-model="niub"
+        />
       </div>
 
       <label for="subject-select" class="form-label"><b>Select a subject:</b></label>
@@ -53,55 +67,20 @@
             <b>How would you rate the stress level caused by the pending task?</b></label
           >
           <div class="mb-3" id="stress-cont">
-            <div class="form-check form-check-inline">
+            <div
+              class="form-check form-check-inline"
+              v-for="(level, index) in stressLevels"
+              :key="index"
+            >
               <input
                 class="form-check-input"
                 type="radio"
-                :id="`stress1-d${n}`"
-                value="1"
+                :id="`stress${index + 1}-d${n}`"
+                :value="index + 1"
                 :name="`stress-1-d${n}`"
+                v-model="stressLevelsValues[n - 1]"
               />
-              <label class="form-check-label" :for="`stress1-d${n}`">Very Low</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input
-                class="form-check-input"
-                type="radio"
-                :id="`stress2-d${n}`"
-                value="2"
-                :name="`stress-1-d${n}`"
-              />
-              <label class="form-check-label" :for="`stress2-d${n}`">Low</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input
-                class="form-check-input"
-                type="radio"
-                :id="`stress3-d${n}`"
-                value="3"
-                :name="`stress-1-d${n}`"
-              />
-              <label class="form-check-label" :for="`stress3-d${n}`">Moderated</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input
-                class="form-check-input"
-                type="radio"
-                :id="`stress4-d${n}`"
-                value="4"
-                :name="`stress-1-d${n}`"
-              />
-              <label class="form-check-label" :for="`stress4-d${n}`">High</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input
-                class="form-check-input"
-                type="radio"
-                :id="`stress5-d${n}`"
-                value="5"
-                :name="`stress-1-d${n}`"
-              />
-              <label class="form-check-label" :for="`stress5-d${n}`">Very High</label>
+              <label class="form-check-label" :for="`stress${index + 1}-d${n}`">{{ level }}</label>
             </div>
           </div>
 
@@ -109,55 +88,20 @@
             ><b>How many hours did you spend on the pending task?</b></label
           >
           <div class="mb-3" id="dedication-cont">
-            <div class="form-check form-check-inline">
+            <div
+              class="form-check form-check-inline"
+              v-for="(option, index) in dedicationOptions"
+              :key="index"
+            >
               <input
                 class="form-check-input"
                 type="radio"
-                :id="`ded1-d${n}`"
-                value="1"
+                :id="`ded${index + 1}-d${n}`"
+                :value="index + 1"
                 :name="`dedication-1-d${n}`"
+                v-model="dedicationValues[n - 1]"
               />
-              <label class="form-check-label" :for="`ded1-d${n}`">&#60;1h/day</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input
-                class="form-check-input"
-                type="radio"
-                :id="`ded2-d${n}`"
-                value="2"
-                :name="`dedication-1-d${n}`"
-              />
-              <label class="form-check-label" :for="`ded2-d${n}`">1-2h/day</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input
-                class="form-check-input"
-                type="radio"
-                :id="`ded3-d${n}`"
-                value="3"
-                :name="`dedication-1-d${n}`"
-              />
-              <label class="form-check-label" :for="`ded3-d${n}`">2-3h/day</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input
-                class="form-check-input"
-                type="radio"
-                :id="`ded4-d${n}`"
-                value="4"
-                :name="`dedication-1-d${n}`"
-              />
-              <label class="form-check-label" :for="`ded4-d${n}`">3-4h/day</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input
-                class="form-check-input"
-                type="radio"
-                :id="`ded5-d${n}`"
-                value="5"
-                :name="`dedication-1-d${n}`"
-              />
-              <label class="form-check-label" :for="`ded5-d${n}`">>4h/day</label>
+              <label class="form-check-label" :for="`ded${index + 1}-d${n}`">{{ option }}</label>
             </div>
           </div>
 
@@ -173,12 +117,13 @@
                     class="form-range"
                     id="percentage_task"
                     value="0"
-                    v-model="percentage[n]"
+                    v-model="percentage[n - 1]"
                     step="10"
                     :name="`percentage-d${n}`"
                   />
                 </div>
-                <div class="col">{{ percentage[n] }}%</div>
+                <div class="col">{{ percentage[n - 1] }}%</div>
+                <div></div>
               </div>
             </div>
           </div>
@@ -195,6 +140,8 @@ export default {
   data() {
     return {
       numberPrevDays: 5,
+      email: '',
+      niub: '',
       selectedSubject: '',
       selectedTask: '',
       options: {
@@ -226,12 +173,44 @@ export default {
         ML: ['Work 2 Lab Project', 'Work 3 Lab Project', 'Work 4 Lab Project', 'Final Exam'],
         TFG: ['Sprint 1', 'Sprint 2', 'Sprint 3', 'Entrega Memòria']
       },
-      percentage: [0, 0, 0, 0, 0]
+      percentage: Array(5).fill(0),
+      stressLevels: ['Very Low', 'Low', 'Moderated', 'High', 'Very High'],
+      stressLevelsValues: Array(5).fill(null),
+      dedicationOptions: ['<1h/day', '1-2h/day', '2-3h/day', '3-4h/day', '>4h/day'],
+      dedicationValues: Array(5).fill(null)
     }
   },
   computed: {
     filteredOptions() {
       return this.options[this.selectedSubject] || []
+    }
+  },
+  methods: {
+    prepareDataSubmit() {
+      const data = {
+        email: this.email,
+        niub: this.niub,
+        subject: this.selectedSubject,
+        task: this.selectedTask,
+        days: this.numberPrevDays,
+        stressLevels: this.stressLevelsValues,
+        dedication: this.dedicationValues,
+        percentages: this.percentage
+      }
+
+      this.submitAnswer(data)
+    },
+    submitAnswer(data) {
+      addDoc(collection(db, 'stud-workload-tracking'), data)
+        .then(() => {
+          console.log('Document successfully written!')
+          alert('Document successfully written!\nThanks for your collaboration :) !! ')
+          this.$router.push("/home")
+        })
+        .catch((error) => {
+          console.error('Error writing document: ', error)
+          alert('Ooopss!\n Something went wrong.\n Try again, please!!')
+        })
     }
   }
 }
