@@ -1,8 +1,25 @@
+<script setup>
+import { onAuthStateChanged, getAuth } from 'firebase/auth'
+import { onMounted, ref } from 'vue';
+
+const isLoggedIn = ref(false)
+onMounted(() => {
+  onAuthStateChanged(getAuth(), (user) => {
+    if (user){
+      isLoggedIn.value = true
+    } else {
+      isLoggedIn.value = false
+    }
+  })
+})
+</script>
+
 <template>
   <div data-bs-theme="dark">
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">Student Workload</a>
+        <img :src="logo_path" alt="" width="30" height="24" class="d-inline-block align-text-top">
+        <a class="navbar-brand" @click="getRedirect('/home')" style="cursor: pointer;">Student Workload</a>
         <button
           class="navbar-toggler"
           type="button"
@@ -17,31 +34,43 @@
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Home</a>
-            </li>
-            <li class="nav-item dropdown">
-              <a
-                class="nav-link dropdown-toggle"
-                href="#"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                EN
-              </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">ESP</a></li>
-                <li><a class="dropdown-item" href="#">EN</a></li>
-              </ul>
+              <a class="nav-link active" aria-current="page" @click="getRedirect('/home')"  style="cursor: pointer;">Home</a>
             </li>
           </ul>
+        </div>
+        <div class="my-2 my-lg-0">
+          <div v-if="isLoggedIn">
+          <button class="btn btn-outline-light my-2 my-sm-0" @click="handleSignOut">Log Out</button>
+          </div>
         </div>
       </div>
     </nav>
   </div>
 </template>
 
-<script></script>
+<script>
+export default {
+  data() {
+    return {
+      logo_path: "src/assets/school.svg"
+    }
+  },
+  methods: {
+    getRedirect(item) {
+      this.$router.push(item)
+    }, 
+    async handleSignOut() {
+      try{
+        await getAuth().signOut().then(
+            this.$router.push("/login")
+         ) 
+      }catch (error) {
+        console.error(error.message)
+      }
+    }
+  }
+}
+</script>
 
 <style scoped>
 header {

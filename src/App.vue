@@ -1,6 +1,5 @@
 <script setup>
 import HeaderItem from './components/HeaderItem.vue'
-import FormView from './components/FormView.vue'
 </script>
 
 <template>
@@ -8,7 +7,7 @@ import FormView from './components/FormView.vue'
     <HeaderItem></HeaderItem>
   </header>
   <div class="container">
-    <FormView></FormView>
+    <RouterView />
   </div>
 </template>
 
