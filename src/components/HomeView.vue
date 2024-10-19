@@ -27,7 +27,7 @@ export default {
         {
           title: 'Student Workload',
           desc: 'Lorem Ipsum',
-          path: 'src/assets/book.png',
+          path: 'public/book.png',
           redirect: '/studworkload-form',
           button_mssg: 'Response',
           button_inactive: false
@@ -35,7 +35,7 @@ export default {
         {
           title: 'Big5',
           desc: 'Lorem Ipsum',
-          path: 'src/assets/neurology.png',
+          path: 'public/neurology.png',
           redirect: '/home',
           button_mssg: 'Coming Soon',
           button_inactive: true
@@ -43,7 +43,7 @@ export default {
         {
           title: 'TKI',
           desc: 'Lorem Ipsum',
-          path: 'src/assets/swords.png',
+          path: 'public/swords.png',
           redirect: '/home',
           button_mssg: 'Coming Soon',
           button_inactive: true
