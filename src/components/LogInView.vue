@@ -22,7 +22,7 @@ import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
       </div>
       <p>
         <a class="link-opacity-50-hover" @click="moveToSignUp" style="cursor: pointer"
-          >Don't have an account yet? Sign In here!</a
+          >Don't have an account yet? Sign Up here!</a
         >
       </p>
       <button type="submit" class="btn btn-primary">Log In</button>
