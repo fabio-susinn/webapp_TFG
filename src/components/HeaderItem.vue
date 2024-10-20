@@ -52,7 +52,7 @@ onMounted(() => {
 export default {
   data() {
     return {
-      logo_path: "public/school.svg"
+      logo_path: "/school.svg"
     }
   },
   methods: {
