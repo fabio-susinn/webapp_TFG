@@ -2,6 +2,7 @@
 import { db } from '@/firebase'
 import { getAuth } from 'firebase/auth'
 import { collection, addDoc, getDocs, where, query } from 'firebase/firestore'
+document.cookie = "__vercel_live_token=value; SameSite=None; Secure";
 </script>
 
 <template>
@@ -120,7 +121,7 @@ import { collection, addDoc, getDocs, where, query } from 'firebase/firestore'
                     v-model="percentage[n - 1]"
                     step="10"
                     :name="`percentage-d${n}`"
-                    @input="updateOtherSliders(n - 1, percentage[n - 1])"
+                  
                   />
                 </div>
                 <div class="col">{{ percentage[n - 1] }}%</div>
@@ -155,7 +156,7 @@ export default {
     }
   },
   beforeMount() {
-    //this.dataUser()
+    this.dataUser()
     this.computeSubjects()
   },
   computed: {
