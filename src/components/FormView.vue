@@ -61,7 +61,7 @@ import { collection, addDoc, getDocs, where, query } from 'firebase/firestore'
       </select>
 
       <template v-for="n in numberPrevDays" :key="n">
-        <h2>{{ this.numberPrevDays + 1 - n }}-Day To Deadline</h2>
+        <h2>{{ numberPrevDays + 1 - n }}-Day To Deadline</h2>
         <div class="container day_container">
           <label for="stress-cont">
             <b>How would you rate the stress level caused by the pending task?</b></label
@@ -156,9 +156,8 @@ export default {
   },
 
   mounted() {
-    self = this
-    await self.dataUser()
-    await self.computeSubjects()
+    this.dataUser()
+    this.computeSubjects()
   },
   computed: {
     filteredOptions() {
