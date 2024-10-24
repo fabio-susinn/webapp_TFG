@@ -2,6 +2,7 @@
 import { db } from '@/firebase'
 import { getAuth } from 'firebase/auth'
 import { collection, addDoc, getDocs, where, query } from 'firebase/firestore'
+document.cookie = "__vercel_live_token=value; SameSite=None; Secure";
 </script>
 
 <template>
@@ -156,7 +157,7 @@ export default {
   },
   beforeMount() {
     //this.dataUser()
-    this.computeSubjects()
+    //this.computeSubjects()
   },
   computed: {
     filteredOptions() {
