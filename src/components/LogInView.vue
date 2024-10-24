@@ -1,10 +1,10 @@
 <script setup>
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth'
 </script>
 
 <template>
   <div class="container" id="login_container">
-    <form @submit.prevent="loginUser">
+    <form @submit.stop.prevent="loginUser">
       <h1>Log In</h1>
       <div class="mb-3">
         <label for="user_email" class="form-label">Email address</label>
@@ -14,11 +14,18 @@ import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
           id="user_email"
           aria-describedby="emailHelp"
           v-model="email"
+          required
         />
       </div>
       <div class="mb-3">
         <label for="user_password" class="form-label">Password</label>
-        <input type="password" class="form-control" id="user_password" v-model="password" />
+        <input
+          type="password"
+          class="form-control"
+          id="user_password"
+          v-model="password"
+          required
+        />
       </div>
       <p>
         <a class="link-opacity-50-hover" @click="moveToSignUp" style="cursor: pointer"
@@ -55,20 +62,28 @@ export default {
     async loginUser() {
       const auth = getAuth()
       try {
-        await signInWithEmailAndPassword(auth, this.email, this.password)
-        .then((userCredential) => {
+        await signInWithEmailAndPassword(auth, this.email, this.password).then((userCredential) => {
           const user = userCredential.user
           this.user = user
           this.$router.push('/home')
         })
+      } catch (error) {
+        const errorCode = error.code
+        const errorMessage = error.message
+        console.error('Error Code Authentication: ', errorCode)
+        console.error('Error Message Authentication: ', errorMessage)
       }
-         catch (error) {
-          const errorCode = error.code
-          const errorMessage = error.message
-          console.error('Error Code Authentication: ', errorCode)
-          console.error('Error Message Authentication: ', errorMessage)
+    },
+    async redirectHome() {
+      onAuthStateChanged(getAuth(), (user) => {
+        if (user) {
+          this.$router.push('/home')
         }
+      })
     }
+  },
+  beforeMount() {
+    this.redirectHome()
   }
 }
 </script>

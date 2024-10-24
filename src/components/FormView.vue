@@ -1,6 +1,7 @@
 <script setup>
 import { db } from '@/firebase'
-import { collection, addDoc } from 'firebase/firestore'
+import { getAuth } from 'firebase/auth'
+import { collection, addDoc, getDocs, where, query } from 'firebase/firestore'
 </script>
 
 <template>
@@ -16,6 +17,7 @@ import { collection, addDoc } from 'firebase/firestore'
           id="email-formcontrol"
           placeholder="name@alumnes.ub.edu"
           v-model="email"
+          required
         />
       </div>
 
@@ -27,6 +29,7 @@ import { collection, addDoc } from 'firebase/firestore'
           id="niub-formcontrol"
           placeholder="12345678"
           v-model="niub"
+          required
         />
       </div>
 
@@ -37,13 +40,10 @@ import { collection, addDoc } from 'firebase/firestore'
         id="subject-select"
         style="margin-bottom: 16px"
         v-model="selectedSubject"
+        required
       >
         <option disabled value="---">---</option>
-        <option value="ProgI">Programació I</option>
-        <option value="ED">Estructura de Dades</option>
-        <option value="NDV">Normative & Dynamic Virtual Worlds</option>
-        <option value="ML">Introduction to Machine Learning</option>
-        <option value="TFG">Projecte Final de Grau</option>
+        <option v-for="sub in subjects" :value="sub.val" :key="sub">{{ sub.text }}</option>
       </select>
 
       <label for="task-select" class="form-label"><b>Select a task:</b></label>
@@ -53,6 +53,7 @@ import { collection, addDoc } from 'firebase/firestore'
         id="task-select"
         style="margin-bottom: 16px"
         v-model="selectedTask"
+        required
       >
         <option v-for="(option, index) in filteredOptions" :key="index" :value="option">
           {{ option }}
@@ -60,8 +61,7 @@ import { collection, addDoc } from 'firebase/firestore'
       </select>
 
       <template v-for="n in numberPrevDays" :key="n">
-        <h2>DAY {{ n }}</h2>
-
+        <h2>{{ numberPrevDays + 1 - n }}-Day To Deadline</h2>
         <div class="container day_container">
           <label for="stress-cont">
             <b>How would you rate the stress level caused by the pending task?</b></label
@@ -120,6 +120,7 @@ import { collection, addDoc } from 'firebase/firestore'
                     v-model="percentage[n - 1]"
                     step="10"
                     :name="`percentage-d${n}`"
+                    @input="updateOtherSliders(n - 1, percentage[n - 1])"
                   />
                 </div>
                 <div class="col">{{ percentage[n - 1] }}%</div>
@@ -142,37 +143,10 @@ export default {
       numberPrevDays: 5,
       email: '',
       niub: '',
+      subjects: [],
       selectedSubject: '',
       selectedTask: '',
-      options: {
-        ProgI: [
-          'Prova PRAC1',
-          'Prova PRAC2',
-          'Prova PRAC3',
-          'Parcial 1',
-          'Parcial 2/Final',
-          'Reavaluació Pràctiques',
-          'Reavaluació Teoria'
-        ],
-        ED: [
-          'Prova PRAC1',
-          'Prova PRAC2',
-          'Prova PRAC3',
-          'Parcial',
-          'Final',
-          'Reavaluació Pràctiques',
-          'Reavaluació Teoria'
-        ],
-        NDV: [
-          'Sprint 1 Lab Project',
-          'Sprint 2 Lab Project',
-          'Sprint 3 Lab Project',
-          'Upload Final Report',
-          'Oral Presentation'
-        ],
-        ML: ['Work 2 Lab Project', 'Work 3 Lab Project', 'Work 4 Lab Project', 'Final Exam'],
-        TFG: ['Sprint 1', 'Sprint 2', 'Sprint 3', 'Entrega Memòria']
-      },
+      options: {},
       percentage: Array(5).fill(0),
       stressLevels: ['Very Low', 'Low', 'Moderated', 'High', 'Very High'],
       stressLevelsValues: Array(5).fill(null),
@@ -180,12 +154,37 @@ export default {
       dedicationValues: Array(5).fill(null)
     }
   },
+
+  mounted() {
+    this.dataUser()
+    this.computeSubjects()
+  },
   computed: {
     filteredOptions() {
       return this.options[this.selectedSubject] || []
     }
   },
   methods: {
+    async dataUser() {
+      const usersRef = collection(db, 'users')
+      const email_user = getAuth().currentUser.email
+      const q = query(usersRef, where('email', '==', email_user))
+      const querySnapshot = await getDocs(q)
+      const niub = querySnapshot.docs[0].data().niub
+
+      this.email = email_user
+      this.niub = niub
+    },
+    async computeSubjects() {
+      const subjectRef = collection(db, 'subjects')
+      const q = query(subjectRef)
+      const querySnapshot = await getDocs(q)
+      querySnapshot.forEach((doc) => {
+        const doc_data = doc.data()
+        this.subjects.push({ val: doc_data.subject_val, text: doc_data.subject_text })
+        this.options[doc_data.subject_val] = doc_data.tasks
+      })
+    },
     prepareDataSubmit() {
       const data = {
         email: this.email,
@@ -195,7 +194,8 @@ export default {
         days: this.numberPrevDays,
         stressLevels: this.stressLevelsValues,
         dedication: this.dedicationValues,
-        percentages: this.percentage
+        percentages: this.percentage,
+        date: this.getCurrentDate()
       }
 
       this.submitAnswer(data)
@@ -205,12 +205,26 @@ export default {
         .then(() => {
           console.log('Document successfully written!')
           alert('Document successfully written!\nThanks for your collaboration :) !! ')
-          this.$router.push("/home")
+          this.$router.push('/home')
         })
         .catch((error) => {
           console.error('Error writing document: ', error)
           alert('Ooopss!\n Something went wrong.\n Try again, please!!')
         })
+    },
+    updateOtherSliders(idx, val) {
+      this.percentage[idx] = val
+      for (let i = idx + 1; i < this.numberPrevDays; i++) {
+        this.percentage[i] = val
+      }
+    },
+    getCurrentDate() {
+      const date = new Date()
+      const day = String(date.getDate()).padStart(2, '0') // Get day and pad with 0 if needed
+      const month = String(date.getMonth() + 1).padStart(2, '0') // Get month (0-indexed, so add 1) and pad
+      const year = date.getFullYear() // Get full year
+
+      return `${day}/${month}/${year}` // Format as dd/mm/yyyy
     }
   }
 }

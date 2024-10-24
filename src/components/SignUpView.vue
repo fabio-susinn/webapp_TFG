@@ -1,7 +1,7 @@
 <script setup>
 import { db } from '@/firebase'
 import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth'
-import { collection, addDoc } from 'firebase/firestore'
+import { collection, addDoc, getDocs, query } from 'firebase/firestore'
 </script>
 
 <template>
@@ -17,6 +17,7 @@ import { collection, addDoc } from 'firebase/firestore'
           aria-describedby="emailHelp"
           placeholder="name@alumnes.ub.edu"
           v-model="email"
+          required
         />
       </div>
       <div class="mb-3">
@@ -27,11 +28,16 @@ import { collection, addDoc } from 'firebase/firestore'
           id="niub-formcontrol"
           placeholder="12345678"
           v-model="niub"
+          required
         />
       </div>
+      <label for="subject-select" class="text-muted" style="margin-bottom: 0.75rem;"
+        >You can find it in your MonUB Profile &rarr; Academic Report</label
+      >
       <div class="mb-3">
         <label for="user_password" class="form-label">Password</label>
-        <input type="password" class="form-control" id="user_password" />
+        <input type="password" class="form-control" id="user_password" required />
+        <div class="invalid-feedback">Please introduce a valid password.</div>
         <label for="user_password" class="text-muted" style="margin-top: 0.75rem"
           >Password must be 6 characters length</label
         >
@@ -45,12 +51,9 @@ import { collection, addDoc } from 'firebase/firestore'
         multiple
         size="5"
         v-model="selectedSubjects"
+        required
       >
-        <option value="ProgI">Programació I</option>
-        <option value="ED">Estructura de Dades</option>
-        <option value="NDV">Normative & Dynamic Virtual Worlds</option>
-        <option value="ML">Introduction to Machine Learning</option>
-        <option value="TFG">Projecte Final de Grau</option>
+        <option v-for="sub in subjects" :value="sub.val" :key="sub">{{ sub.text }}</option>
       </select>
       <label for="subject-select" class="text-muted" style="margin-bottom: 0.75rem"
         >Hold down CTRL and click to select multiple choices</label
@@ -66,6 +69,7 @@ import { collection, addDoc } from 'firebase/firestore'
             id="male_radio"
             value="M"
             v-model="gender"
+            required
           />
           <label class="form-check-label" for="male_radio"> Male </label>
         </div>
@@ -77,6 +81,7 @@ import { collection, addDoc } from 'firebase/firestore'
             id="female_radio"
             value="F"
             v-model="gender"
+            required
           />
           <label class="form-check-label" for="female_radio"> Female </label>
         </div>
@@ -88,6 +93,7 @@ import { collection, addDoc } from 'firebase/firestore'
             id="other_radio"
             value="X"
             v-model="gender"
+            required
           />
           <label class="form-check-label" for="other_radio"> Other </label>
         </div>
@@ -104,8 +110,12 @@ export default {
       email: '',
       selectedSubjects: [],
       niub: '',
-      gender: ''
+      gender: '',
+      subjects: []
     }
+  },
+  beforeMount() {
+    this.computeSubjects()
   },
   methods: {
     prepareDataSubmit() {
@@ -118,7 +128,17 @@ export default {
 
       const password = document.getElementById('user_password').value
 
-      this.submitAnswer(data, password)
+      if (this.form_control(data)) {
+        this.submitAnswer(data, password)
+      }
+    },
+    form_control(data) {
+      data.email
+      if (length(document.getElementById('user_password').value) < 6) {
+        document.getElementById('user_password').focus()
+        return false
+      }
+      return true
     },
     async submitAnswer(data, password) {
       try {
@@ -141,7 +161,15 @@ export default {
         console.error('Error Message Authencication: ', errorMessage)
         // ..
       }
-      
+    },
+    async computeSubjects() {
+      const subjectRef = collection(db, 'subjects')
+      const q = query(subjectRef)
+      const querySnapshot = await getDocs(q)
+      querySnapshot.forEach((doc) => {
+        const doc_data = doc.data()
+        this.subjects.push({ val: doc_data.subject_val, text: doc_data.subject_text })
+      })
     }
   }
 }
@@ -153,5 +181,28 @@ export default {
   border: var(--bs-border-width) solid var(--bs-border-color);
   border-radius: var(--bs-border-radius);
   padding: 3rem;
+}
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
 }
 </style>
