@@ -3,11 +3,11 @@ import { createMemoryHistory, createRouter } from 'vue-router'
 import LogInView from '@/components/LogInView.vue'
 import FormView from '@/components/FormView.vue'
 import HomeView from '@/components/HomeView.vue'
-import SignUpView from '@/components/SignUpView.vue'  
+import SignUpView from '@/components/SignUpView.vue'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
 const routes = [
-  { path: '/login', component: LogInView },
+  { path: '/login', name: 'login', component: LogInView },
   { path: '/signup', component: SignUpView },
   {
     path: '/studworkload-form',
@@ -18,6 +18,7 @@ const routes = [
   },
   {
     path: '/home',
+    name: 'home',
     component: HomeView,
     meta: {
       requiresAuth: true
