@@ -155,7 +155,7 @@ export default {
     }
   },
   beforeMount() {
-    this.dataUser()
+    //this.dataUser()
     this.computeSubjects()
   },
   computed: {
