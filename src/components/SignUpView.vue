@@ -28,7 +28,6 @@ import { collection, addDoc, getDocs, query } from 'firebase/firestore'
           id="niub-formcontrol"
           placeholder="12345678"
           v-model="niub"
-          required
         />
       </div>
       <label for="subject-select" class="text-muted" style="margin-bottom: 0.75rem;"

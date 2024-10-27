@@ -60,6 +60,10 @@ import { collection, addDoc, getDocs, where, query } from 'firebase/firestore'
         </option>
       </select>
 
+      <div class="bd-callout">
+        <b>Note:</b> Filling all sub-day forms is NOT mandatory to submit your answer. (Ex: You just worked the past 3 days)
+      </div>
+
       <template v-for="n in numberPrevDays" :key="n">
         <h2>{{ numberPrevDays + 1 - n }}-Day To Deadline</h2>
         <div class="container day_container">
@@ -131,7 +135,7 @@ import { collection, addDoc, getDocs, where, query } from 'firebase/firestore'
         </div>
       </template>
 
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <button type="submit" class="btn btn-primary" style="margin-bottom: 3rem;">Submit</button>
     </form>
   </div>
 </template>
@@ -237,5 +241,16 @@ export default {
 
 .day_container {
   padding: 0.375rem 0.75rem;
+}
+
+.bd-callout {
+  --bs-link-color-rgb: var(--bd-callout-link);
+  --bs-code-color: var(--bd-callout-code-color);
+  padding: 1.25rem;
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+  color: var(--bd-callout-color, inherit);
+  background-color: var(--bd-callout-bg, var(--bs-gray-100));
+  border-left: 0.25rem solid var(--bd-callout-border, var(--bs-gray-300));
 }
 </style>
