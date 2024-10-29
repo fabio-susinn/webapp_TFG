@@ -133,7 +133,7 @@ export default {
     },
     form_control(data) {
       data.email
-      if (length(document.getElementById('user_password').value) < 6) {
+      if (document.getElementById('user_password').length < 6) {
         document.getElementById('user_password').focus()
         return false
       }
