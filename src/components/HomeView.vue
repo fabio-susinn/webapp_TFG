@@ -44,6 +44,10 @@
 </template>
 
 <script>
+import { db } from '@/firebase';
+import { getAuth } from 'firebase/auth';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+
 export default {
   data() {
     return {
@@ -58,24 +62,45 @@ export default {
         },
         {
           title: 'Big5',
-          desc: 'In Development',
+          desc: "Personality test based on Five Traits",
           path: '/big5.webp',
-          redirect: '/home',
-          button_mssg: 'Coming Soon',
-          button_inactive: true
+          redirect: '/personality-form/big5',
+          button_mssg: 'Response',
+          button_inactive: false
         },
         {
           title: 'TKI',
-          desc: 'In Development',
+          desc: 'Personality test based on Conflict Resolution',
           path: '/swords.png',
-          redirect: '/home',
-          button_mssg: 'Coming Soon',
-          button_inactive: true
+          redirect: '/personality-form/tki',
+          button_mssg: 'Response',
+          button_inactive: false
         }
       ]
     }
   },
+  created(){
+    this.getResponsedForms()
+  },
   methods: {
+    async getResponsedForms(){
+      const formBig5rackRef = collection(db, 'big5-tracking')
+      const formTKIrackRef = collection(db, 'tki-tracking')
+      const email_user = getAuth().currentUser.email
+      const q1 = query(formBig5rackRef, where('email', '==', email_user))
+      const q2 = query(formTKIrackRef, where('email', '==', email_user))
+      const querySnapshot = await getDocs(q1)
+      const querySnapshot2 = await getDocs(q2)
+      if (!querySnapshot.empty){
+        this.info_forms[1].button_inactive = true
+        this.info_forms[1].button_mssg = "Responsed"
+      }
+      if (!querySnapshot2.empty){
+        this.info_forms[2].button_inactive = true
+        this.info_forms[2].button_mssg = "Responsed"
+      }
+      
+    },
     getRedirect(item) {
       this.$router.push(item.redirect)
     }
