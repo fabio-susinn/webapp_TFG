@@ -5,6 +5,7 @@ import FormView from '@/components/FormView.vue'
 import HomeView from '@/components/HomeView.vue'
 import SignUpView from '@/components/SignUpView.vue'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import FormOnceView from '@/components/FormOnceView.vue'
 
 const routes = [
   { path: '/login', name: 'login', component: LogInView },
@@ -20,6 +21,13 @@ const routes = [
     path: '/home',
     name: 'home',
     component: HomeView,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/personality-form/:formName',
+    component: FormOnceView,
     meta: {
       requiresAuth: true
     }
