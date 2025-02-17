@@ -84,6 +84,7 @@ export default {
         const errorMessage = error.message
         console.error('Error Code Authentication: ', errorCode)
         console.error('Error Message Authentication: ', errorMessage)
+        alert('Ooopss!\nInvalid Authentication\nCheck the email and password are correctly introduced.')
       }
     },
     async redirectHome() {
