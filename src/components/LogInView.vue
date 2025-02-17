@@ -38,11 +38,23 @@ import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from 'firebas
 </template>
 
 <style scoped>
-#login_container {
+
+
+@media (max-width: 1000px) {
+  #login_container {
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+  padding: 3rem;
+  }
+}
+
+@media (min-width: 1001px) {
+  #login_container {
   width: 50%;
   border: var(--bs-border-width) solid var(--bs-border-color);
   border-radius: var(--bs-border-radius);
   padding: 3rem;
+  }
 }
 </style>
 

@@ -5,7 +5,7 @@ import { collection, addDoc, getDocs, query } from 'firebase/firestore'
 </script>
 
 <template>
-  <div class="container" id="login_container">
+  <div class="container" id="signup_container">
     <form @submit.prevent="prepareDataSubmit">
       <h1>Sign Up</h1>
       <div class="mb-3">
@@ -175,12 +175,23 @@ export default {
 </script>
 
 <style scoped>
-#login_container {
+@media (max-width: 1000px) {
+  #signup_container {
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+  padding: 3rem;
+  }
+}
+
+@media (min-width: 1001px) {
+  #signup_container {
   width: 50%;
   border: var(--bs-border-width) solid var(--bs-border-color);
   border-radius: var(--bs-border-radius);
   padding: 3rem;
+  }
 }
+
 .tooltip {
   position: relative;
   display: inline-block;
