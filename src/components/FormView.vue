@@ -155,12 +155,13 @@ export default {
       stressLevels: ['Very Low', 'Low', 'Moderated', 'High', 'Very High'],
       stressLevelsValues: Array(5).fill(null),
       dedicationOptions: ['<1h/day', '1-2h/day', '2-3h/day', '3-4h/day', '>4h/day'],
-      dedicationValues: Array(5).fill(null)
+      dedicationValues: Array(5).fill(null),
+      userSubjects: []
     }
   },
 
-  mounted() {
-    this.dataUser()
+  async mounted() {
+    await this.dataUser()
     this.computeSubjects()
   },
   computed: {
@@ -178,10 +179,11 @@ export default {
 
       this.email = email_user
       this.niub = niub
+      this.userSubjects = querySnapshot.docs[0].data().subjects
     },
     async computeSubjects() {
       const subjectRef = collection(db, 'subjects')
-      const q = query(subjectRef)
+      const q = query(subjectRef, where("subject_val", "in", this.userSubjects))
       const querySnapshot = await getDocs(q)
       querySnapshot.forEach((doc) => {
         const doc_data = doc.data()
