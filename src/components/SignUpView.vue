@@ -97,6 +97,12 @@ import { collection, addDoc, getDocs, query } from 'firebase/firestore'
           <label class="form-check-label" for="other_radio"> Other </label>
         </div>
       </div>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="flexCheck" v-model="termsOfService" required>
+        <label class="form-check-label" for="flexCheck">
+          I have read and agree to the <RouterLink to="/terms-of-service" target="_blank">Terms of Service & Privacy Policy</RouterLink>.
+        </label> 
+      </div>
       <button type="submit" class="btn btn-primary">Register</button>
     </form>
   </div>
@@ -110,7 +116,8 @@ export default {
       selectedSubjects: [],
       niub: '',
       gender: '',
-      subjects: []
+      subjects: [],
+      termsOfService: ''
     }
   },
   beforeMount() {
@@ -122,7 +129,8 @@ export default {
         email: this.email,
         niub: this.niub,
         subjects: this.selectedSubjects,
-        gender: this.gender
+        gender: this.gender,
+        termsOfService: this.termsOfService
       }
 
       const password = document.getElementById('user_password').value
@@ -158,7 +166,6 @@ export default {
         const errorMessage = error.message
         console.error('Error Code Authencication: ', errorCode)
         console.error('Error Message Authencication: ', errorMessage)
-        // ..
       }
     },
     async computeSubjects() {
@@ -175,6 +182,10 @@ export default {
 </script>
 
 <style scoped>
+button{
+  margin-top: 0.5rem;
+}
+
 @media (max-width: 1000px) {
   #signup_container {
   border: var(--bs-border-width) solid var(--bs-border-color);

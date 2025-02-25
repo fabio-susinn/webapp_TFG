@@ -6,6 +6,7 @@ import HomeView from '@/components/HomeView.vue'
 import SignUpView from '@/components/SignUpView.vue'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import FormOnceView from '@/components/FormOnceView.vue'
+import TermsOfService from '@/components/TermsOfService.vue'
 
 const routes = [
   { path: '/login', name: 'login', component: LogInView },
@@ -30,6 +31,13 @@ const routes = [
     component: FormOnceView,
     meta: {
       requiresAuth: true
+    }
+  },
+  {
+    path: '/terms-of-service',
+    component: TermsOfService,
+    meta: {
+      requiresAuth: false
     }
   },
   {

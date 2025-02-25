@@ -1,4 +1,11 @@
+<script setup>
+import TermsOfServicePush from './TermsOfServicePush.vue';
+</script>
+
 <template>
+  <Transition>
+    <TermsOfServicePush class="push-notification" v-if="hasTermsOfService" @custom-click="handleTermsAccepted"></TermsOfServicePush>
+  </Transition>
   <div class="container-fluid">
     <div class="row">
       <template v-for="item in info_forms" :key="item">
@@ -49,6 +56,7 @@ import { getAuth } from 'firebase/auth';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 
 export default {
+  components: {TermsOfServicePush},
   data() {
     return {
       info_forms: [
@@ -76,7 +84,8 @@ export default {
           button_mssg: 'Response',
           button_inactive: false
         }
-      ]
+      ], 
+      hasTermsOfService: false
     }
   },
   created(){
@@ -86,11 +95,14 @@ export default {
     async getResponsedForms(){
       const formBig5rackRef = collection(db, 'big5-tracking')
       const formTKIrackRef = collection(db, 'tki-tracking')
+      const userRef = collection(db, 'users')
       const email_user = getAuth().currentUser.email
       const q1 = query(formBig5rackRef, where('email', '==', email_user))
       const q2 = query(formTKIrackRef, where('email', '==', email_user))
+      const q3 = query(userRef, where("email", "==", email_user), where("termsOfService","==", true))
       const querySnapshot = await getDocs(q1)
       const querySnapshot2 = await getDocs(q2)
+      const querySnapshot3 = await getDocs(q3)
       if (!querySnapshot.empty){
         this.info_forms[1].button_inactive = true
         this.info_forms[1].button_mssg = "Responsed"
@@ -99,10 +111,15 @@ export default {
         this.info_forms[2].button_inactive = true
         this.info_forms[2].button_mssg = "Responsed"
       }
-      
+      if(querySnapshot3.empty){
+        this.hasTermsOfService = true
+      }
     },
     getRedirect(item) {
       this.$router.push(item.redirect)
+    },
+    handleTermsAccepted(){
+      this.hasTermsOfService = false
     }
   }
 }
@@ -124,5 +141,12 @@ export default {
   --bd-callout-color: var(--bs-info-text-emphasis);
   --bd-callout-bg: var(--bs-info-bg-subtle);
   --bd-callout-border: var(--bs-info-border-subtle);
+}
+
+.v-leave-active {
+  transition: opacity 0.5s ease;
+}
+.v-leave-to {
+  opacity: 0;
 }
 </style>
