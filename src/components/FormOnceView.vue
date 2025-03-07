@@ -83,13 +83,11 @@ export default {
   methods: {
     async checkIfResponsed() {
       const formTrackRef = collection(db, `${this.$route.params.formName}-tracking`)
-      const email_user = getAuth().currentUser.email
-      const q = query(formTrackRef, where('email', '==', email_user))
+      const uid_user = getAuth().currentUser.uid
+      const q = query(formTrackRef, where('uid', '==', uid_user))
       const querySnapshot = await getDocs(q)
       if (!querySnapshot.empty) {
         this.$router.push('/home')
-      } else {
-        console.log('AQUI')
       }
     },
     async fetchFormQuestions() {
@@ -109,7 +107,7 @@ export default {
     },
     prepareDataSubmit() {
       const data = {
-        email: getAuth().currentUser.email,
+        uid: getAuth().currentUser.uid,
         answers: this.agreementLevelsValues,
         date: this.getCurrentDate()
       }

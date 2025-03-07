@@ -118,30 +118,28 @@ export default {
   },
   methods: {
     prepareDataSubmit() {
-      const data = {
-        email: this.email,
-        niub: this.niub,
-        subjects: this.selectedSubjects,
-        gender: this.gender
-      }
-
       const password = document.getElementById('user_password').value
-
-      if (this.form_control(data)) {
-        this.submitAnswer(data, password)
+      if (this.form_control()) {
+        this.submitAnswer(password)
       }
     },
-    form_control(data) {
-      data.email
+    form_control() {
       if (document.getElementById('user_password').length < 6) {
         document.getElementById('user_password').focus()
         return false
       }
       return true
     },
-    async submitAnswer(data, password) {
+    async submitAnswer(password) {
       try {
-        await createUserWithEmailAndPassword(getAuth(), data.email, password).then(
+        await createUserWithEmailAndPassword(getAuth(), this.email, password).then(()=>{
+          const user_uid = getAuth().currentUser.uid
+          const data = {
+            uid: user_uid,
+            niub: this.niub,
+            subjects: this.selectedSubjects,
+            gender: this.gender
+          }
           addDoc(collection(db, 'users'), data)
             .then(() => {
               console.log('Document successfully written!')
@@ -150,8 +148,8 @@ export default {
             .catch((error) => {
               console.error('Error writing document: ', error)
               alert('Ooopss!\n Something went wrong.\n Try again, please!!')
-            })
-        )
+            })   
+      })
         this.$router.push('/home')
       } catch (error) {
         const errorCode = error.code
