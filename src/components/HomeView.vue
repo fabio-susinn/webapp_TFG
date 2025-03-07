@@ -86,9 +86,9 @@ export default {
     async getResponsedForms(){
       const formBig5rackRef = collection(db, 'big5-tracking')
       const formTKIrackRef = collection(db, 'tki-tracking')
-      const email_user = getAuth().currentUser.email
-      const q1 = query(formBig5rackRef, where('email', '==', email_user))
-      const q2 = query(formTKIrackRef, where('email', '==', email_user))
+      const uid_user = getAuth().currentUser.uid
+      const q1 = query(formBig5rackRef, where('uid', '==', uid_user))
+      const q2 = query(formTKIrackRef, where('uid', '==', uid_user))
       const querySnapshot = await getDocs(q1)
       const querySnapshot2 = await getDocs(q2)
       if (!querySnapshot.empty){

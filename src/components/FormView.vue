@@ -8,31 +8,6 @@ import { collection, addDoc, getDocs, where, query } from 'firebase/firestore'
   <div class="container-fluid" id="main-container">
     <form @submit.prevent="prepareDataSubmit">
       <h1 style="margin-bottom: 3rem">Questionnaire: Student Workload Tracking</h1>
-
-      <div class="mb-3">
-        <label for="email-formcontrol" class="form-label"><b>Email address</b></label>
-        <input
-          type="email"
-          class="form-control"
-          id="email-formcontrol"
-          placeholder="name@alumnes.ub.edu"
-          v-model="email"
-          required
-        />
-      </div>
-
-      <div class="mb-3">
-        <label for="niub-formcontrol" class="form-label"><b>NIUB:</b></label>
-        <input
-          type="number"
-          class="form-control"
-          id="niub-formcontrol"
-          placeholder="12345678"
-          v-model="niub"
-          required
-        />
-      </div>
-
       <label for="subject-select" class="form-label"><b>Select a subject:</b></label>
       <select
         class="form-select"
@@ -172,13 +147,9 @@ export default {
   methods: {
     async dataUser() {
       const usersRef = collection(db, 'users')
-      const email_user = getAuth().currentUser.email
-      const q = query(usersRef, where('email', '==', email_user))
+      const uid_user = getAuth().currentUser.uid
+      const q = query(usersRef, where('uid', '==', uid_user))
       const querySnapshot = await getDocs(q)
-      const niub = querySnapshot.docs[0].data().niub
-
-      this.email = email_user
-      this.niub = niub
       this.userSubjects = querySnapshot.docs[0].data().subjects
     },
     async computeSubjects() {
@@ -193,8 +164,7 @@ export default {
     },
     prepareDataSubmit() {
       const data = {
-        email: this.email,
-        niub: this.niub,
+        uid: getAuth().currentUser.uid,
         subject: this.selectedSubject,
         task: this.selectedTask,
         days: this.numberPrevDays,
