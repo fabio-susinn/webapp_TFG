@@ -20,8 +20,8 @@ export default {
   methods: {
     async acceptTermsService(){
       const user_collection = collection(db, "users")
-      const email_user = getAuth().currentUser.email
-      const q = query(user_collection, where("email", "==", email_user))
+      const user_uid = getAuth().currentUser.uid
+      const q = query(user_collection, where("uid", "==", user_uid))
       const querySnapshot = await getDocs(q)
       for (const docSnapshot of querySnapshot.docs) {
         const userRef = doc(db, "users", docSnapshot.id);
