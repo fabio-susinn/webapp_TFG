@@ -1,4 +1,4 @@
-import { createWebHistory, createRouter } from 'vue-router'
+import {createRouter, createWebHashHistory } from 'vue-router'
 
 import LogInView from '@/components/LogInView.vue'
 import FormView from '@/components/FormView.vue'
@@ -6,6 +6,7 @@ import HomeView from '@/components/HomeView.vue'
 import SignUpView from '@/components/SignUpView.vue'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import FormOnceView from '@/components/FormOnceView.vue'
+import TermsOfService from '@/components/TermsOfService.vue'
 
 const routes = [
   { path: '/login', name: 'login', component: LogInView },
@@ -33,13 +34,20 @@ const routes = [
     }
   },
   {
+    path: '/terms-of-service',
+    component: TermsOfService,
+    meta: {
+      requiresAuth: false
+    }
+  },
+  {
     path: '/',
     redirect: '/login'
   }
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes
 })
 
