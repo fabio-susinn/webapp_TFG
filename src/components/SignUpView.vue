@@ -21,19 +21,6 @@ import { collection, addDoc, getDocs, query } from 'firebase/firestore'
         />
       </div>
       <div class="mb-3">
-        <label for="niub-formcontrol" class="form-label">NIUB</label>
-        <input
-          type="number"
-          class="form-control"
-          id="niub-formcontrol"
-          placeholder="12345678"
-          v-model="niub"
-        />
-      </div>
-      <label for="subject-select" class="text-muted" style="margin-bottom: 0.75rem;"
-        >You can find it in your MonUB Profile &rarr; Academic Report</label
-      >
-      <div class="mb-3">
         <label for="user_password" class="form-label">Password</label>
         <input type="password" class="form-control" id="user_password" required />
         <div class="invalid-feedback">Please introduce a valid password.</div>
@@ -114,7 +101,6 @@ export default {
     return {
       email: '',
       selectedSubjects: [],
-      niub: '',
       gender: '',
       subjects: [],
       termsOfService: ''
@@ -143,7 +129,6 @@ export default {
           const user_uid = getAuth().currentUser.uid
           const data = {
             uid: user_uid,
-            niub: this.niub,
             subjects: this.selectedSubjects,
             gender: this.gender,
             termsOfService: this.termsOfService
