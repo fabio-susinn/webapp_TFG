@@ -1,14 +1,13 @@
 # webapp_TFG
 
-This template should help get you started developing with Vue 3 in Vite.
+Webapp to collect students workload forms, Big5 and TKI personality tests in a centralized approach. Backend services use the cloud-service Firebase Firestore. User management uses Firebase Authenticator. 
 
-## Recommended IDE Setup
+# Link
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+[https://webapp-tfg.vercel.app/](https://webapp-tfg.vercel.app/)
 
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+## Dependencies
+Node.js v22.15.1 or greater
 
 ## Project Setup
 
@@ -22,14 +21,10 @@ npm install
 npm run dev
 ```
 
-### Compile and Minify for Production
+## Production Environment
+
+To upload a feature to production environment, you just need to commit to the main branch. After that, the Vercel bot will automatically deploy the changes in the production environment.
 
 ```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
+git push origin main
 ```

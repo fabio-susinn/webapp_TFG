@@ -117,8 +117,14 @@ export default {
       }
     },
     form_control() {
+      const regexEmail= /^[a-zA-Z0-9._%+-]+@(alumnes\.ub\.edu|estudiantat\.upc\.edu)$/;
       if (document.getElementById('user_password').length < 6) {
         document.getElementById('user_password').focus()
+        return false
+      }
+      if (!regexEmail.test(this.email)) {
+        alert('Please introduce a valid email address.\nIt must be an @alumnes.ub.edu or @estudiantat.upc.edu email.')
+        document.getElementById('user_email').focus()
         return false
       }
       return true
