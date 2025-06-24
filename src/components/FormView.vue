@@ -95,11 +95,11 @@ import { collection, addDoc, getDocs, where, query } from 'firebase/firestore'
                     type="range"
                     class="form-range"
                     id="percentage_task"
-                    value="0"
-                    v-model="percentage[n - 1]"
+                    :value="percentage[n - 1]"
+                    :max="100"
                     step="10"
                     :name="`percentage-d${n}`"
-                    @input="updateOtherSliders(n - 1, percentage[n - 1])"
+                    @change="updateOtherSliders(n - 1, $event.target.value)"
                   />
                 </div>
                 <div class="col">{{ percentage[n - 1] }}%</div>
@@ -127,6 +127,7 @@ export default {
       selectedTask: '',
       options: {},
       percentage: Array(5).fill(0),
+      percentage_previous: Array(5).fill(0),
       stressLevels: ['Very Low', 'Low', 'Moderated', 'High', 'Very High'],
       stressLevelsValues: Array(5).fill(null),
       dedicationOptions: ['<1h/day', '1-2h/day', '2-3h/day', '3-4h/day', '>4h/day'],
@@ -162,6 +163,25 @@ export default {
         this.options[doc_data.subject_val] = doc_data.tasks
       })
     },
+    controlData(){
+      const countStressNulls = this.stressLevelsValues.filter(item => item === null).length
+      const countStressDedication = this.dedicationValues.filter(item => item === null).length
+      
+      if(countStressDedication == 5 && countStressNulls == 5){
+        alert('Please, fill at least one previous day form.')
+        return false
+      }
+      for(let i = 1; i < this.numberPrevDays; i++) {
+        console.log(+this.percentage[i], this.percentage[i - 1])
+
+        if(+this.percentage[i] < +this.percentage[i - 1]) {
+          alert('The completed percentage of the task must be non-decreasing. \n Ex: 60%, 70%, 80%, 90%, 100%')
+          return false
+        }
+      }
+
+      return true
+    },
     prepareDataSubmit() {
       const data = {
         uid: getAuth().currentUser.uid,
@@ -173,8 +193,9 @@ export default {
         percentages: this.percentage,
         date: this.getCurrentDate()
       }
-
-      this.submitAnswer(data)
+      if (this.controlData()){
+        this.submitAnswer(data)
+      }
     },
     submitAnswer(data) {
       addDoc(collection(db, 'stud-workload-tracking'), data)

@@ -70,7 +70,6 @@ router.beforeEach(async (to, from, next) => {
     if (await getCurrentUser()) {
       next()
     } else {
-      alert('You must be logged in before using this feature!!')
       next('/login')
     }
   } else {
