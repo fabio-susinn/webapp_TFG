@@ -28,22 +28,21 @@ import { collection, addDoc, getDocs, query } from 'firebase/firestore'
           >Password must be 6 characters length</label
         >
       </div>
-      <label for="subject-select" class="form-label">Select the subjects you are coursing:</label>
-      <select
-        class="form-select"
-        aria-label="Default select example"
-        id="subject-select"
-        style="margin-bottom: 16px"
-        multiple
-        size="5"
-        v-model="selectedSubjects"
-        required
-      >
-        <option v-for="sub in subjects" :value="sub.val" :key="sub">{{ sub.text }}</option>
-      </select>
-      <label for="subject-select" class="text-muted" style="margin-bottom: 0.75rem"
-        >Hold down CTRL and click to select multiple choices</label
-      >
+      <label class="form-label">Select the subjects you are coursing:</label>
+      <div id="subjects-container" style="margin-bottom: 16px">
+        <div class="form-check" v-for="sub in subjects" :key="sub.val">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            :value="sub.val"
+            :id="'subject-' + sub.val"
+            v-model="selectedSubjects"
+          />
+          <label class="form-check-label" :for="'subject-' + sub.val">
+            {{ sub.text }}
+          </label>
+        </div>
+      </div>
 
       <div id="gender_container" style="margin-bottom: 0.75rem">
         <label for="gender_container" class="form-label">Select your gender: </label>
@@ -173,6 +172,18 @@ export default {
 <style scoped>
 button{
   margin-top: 0.5rem;
+}
+
+#subjects-container {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+  padding: 1rem;
+}
+
+#subjects-container .form-check {
+  margin-bottom: 0.5rem;
 }
 
 @media (max-width: 1000px) {
